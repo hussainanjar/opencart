@@ -14,7 +14,7 @@
   <div class="box">
     <div class="heading">
       <h1><img src="view/image/setting.png" alt="" /> <?php echo $heading_title; ?></h1>
-      <div class="buttons"><a onclick="$('#form').submit();" class="button"><span><?php echo $button_save; ?></span></a><a onclick="location = '<?php echo $cancel; ?>';" class="button"><span><?php echo $button_cancel; ?></span></a></div>
+      <div class="buttons"><a onclick="$('#form').submit();" class="button"><?php echo $button_save; ?></a><a onclick="location = '<?php echo $cancel; ?>';" class="button"><?php echo $button_cancel; ?></a></div>
     </div>
     <div class="content">
       <div id="tabs" class="htabs"><a href="#tab-general"><?php echo $tab_general; ?></a><a href="#tab-store"><?php echo $tab_store; ?></a><a href="#tab-local"><?php echo $tab_local; ?></a><a href="#tab-option"><?php echo $tab_option; ?></a><a href="#tab-image"><?php echo $tab_image; ?></a><a href="#tab-server"><?php echo $tab_server; ?></a></div>
@@ -104,7 +104,7 @@
             </tr>
             <tr>
               <td><?php echo $entry_layout; ?></td>
-              <td><select name="config_layout">
+              <td><select name="config_layout_id">
                   <?php foreach ($layouts as $layout) { ?>
                   <?php if ($layout['layout_id'] == $config_layout_id) { ?>
                   <option value="<?php echo $layout['layout_id']; ?>" selected="selected"><?php echo $layout['name']; ?></option>
@@ -183,6 +183,38 @@
                 <input type="radio" name="config_tax" value="0" checked="checked" />
                 <?php echo $text_no; ?>
                 <?php } ?></td>
+            </tr>
+            <tr>
+              <td><?php echo $entry_tax_default; ?></td>
+              <td><select name="config_tax_default">
+                  <option value=""><?php echo $text_none; ?></option>
+                  <?php  if ($config_tax_default == 'shipping') { ?>
+                  <option value="shipping" selected="selected"><?php echo $text_shipping; ?></option>
+                  <?php } else { ?>
+                  <option value="shipping"><?php echo $text_shipping; ?></option>
+                  <?php } ?>
+                  <?php  if ($config_tax_default == 'payment') { ?>
+                  <option value="payment" selected="selected"><?php echo $text_payment; ?></option>
+                  <?php } else { ?>
+                  <option value="payment"><?php echo $text_payment; ?></option>
+                  <?php } ?>
+                </select></td>
+            </tr>
+            <tr>
+              <td><?php echo $entry_tax_customer; ?></td>
+              <td><select name="config_tax_customer">
+                  <option value=""><?php echo $text_none; ?></option>
+                  <?php  if ($config_tax_customer == 'shipping') { ?>
+                  <option value="shipping" selected="selected"><?php echo $text_shipping; ?></option>
+                  <?php } else { ?>
+                  <option value="shipping"><?php echo $text_shipping; ?></option>
+                  <?php } ?>
+                  <?php  if ($config_tax_customer == 'payment') { ?>
+                  <option value="payment" selected="selected"><?php echo $text_payment; ?></option>
+                  <?php } else { ?>
+                  <option value="payment"><?php echo $text_payment; ?></option>
+                  <?php } ?>
+                </select></td>
             </tr>
             <tr>
               <td><?php echo $entry_customer_group; ?></td>
@@ -324,13 +356,26 @@
           <table class="form">
             <tr>
               <td><?php echo $entry_logo; ?></td>
-              <td><input type="hidden" name="config_logo" value="<?php echo $config_logo; ?>" id="logo" />
-                <img src="<?php echo $logo; ?>" alt="" id="thumb-logo" class="image" onclick="image_upload('logo', 'thumb-logo');" /></td>
+              <td><div class="image"><img src="<?php echo $logo; ?>" alt="" id="thumb-logo" />
+                  <input type="hidden" name="config_logo" value="<?php echo $config_logo; ?>" id="logo" />
+                  <br />
+                  <a onclick="image_upload('logo', 'thumb-logo');"><?php echo $text_browse; ?></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('#thumb-logo').attr('src', '<?php echo $no_image; ?>'); $('#logo').attr('value', '');"><?php echo $text_clear; ?></a></div></td>
             </tr>
             <tr>
               <td><?php echo $entry_icon; ?></td>
-              <td><input type="hidden" name="config_icon" value="<?php echo $config_icon; ?>" id="icon" />
-                <img src="<?php echo $icon; ?>" alt="" id="thumb-icon" class="image" onclick="image_upload('icon', 'thumb-icon');" /></td>
+              <td><div class="image"><img src="<?php echo $icon; ?>" alt="" id="thumb-icon" />
+                  <input type="hidden" name="config_icon" value="<?php echo $config_icon; ?>" id="icon" />
+                  <br />
+                  <a onclick="image_upload('icon', 'thumb-icon');"><?php echo $text_browse; ?></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('#thumb-icon').attr('src', '<?php echo $no_image; ?>'); $('#icon').attr('value', '');"><?php echo $text_clear; ?></a></div></td>
+            </tr>
+            <tr>
+              <td><span class="required">*</span> <?php echo $entry_image_category; ?></td>
+              <td><input type="text" name="config_image_category_width" value="<?php echo $config_image_category_width; ?>" size="3" />
+                x
+                <input type="text" name="config_image_category_height" value="<?php echo $config_image_category_height; ?>" size="3" />
+                <?php if ($error_image_category) { ?>
+                <span class="error"><?php echo $error_image_category; ?></span>
+                <?php } ?></td>
             </tr>
             <tr>
               <td><span class="required">*</span> <?php echo $entry_image_thumb; ?></td>
@@ -357,24 +402,6 @@
                 <input type="text" name="config_image_product_height" value="<?php echo $config_image_product_height; ?>" size="3" />
                 <?php if ($error_image_product) { ?>
                 <span class="error"><?php echo $error_image_product; ?></span>
-                <?php } ?></td>
-            </tr>
-            <tr>
-              <td><span class="required">*</span> <?php echo $entry_image_category; ?></td>
-              <td><input type="text" name="config_image_category_width" value="<?php echo $config_image_category_width; ?>" size="3" />
-                x
-                <input type="text" name="config_image_category_height" value="<?php echo $config_image_category_height; ?>" size="3" />
-                <?php if ($error_image_category) { ?>
-                <span class="error"><?php echo $error_image_category; ?></span>
-                <?php } ?></td>
-            </tr>
-            <tr>
-              <td><span class="required">*</span> <?php echo $entry_image_manufacturer; ?></td>
-              <td><input type="text" name="config_image_manufacturer_width" value="<?php echo $config_image_manufacturer_width; ?>" size="3" />
-                x
-                <input type="text" name="config_image_manufacturer_height" value="<?php echo $config_image_manufacturer_height; ?>" size="3" />
-                <?php if ($error_image_manufacturer) { ?>
-                <span class="error"><?php echo $error_image_manufacturer; ?></span>
                 <?php } ?></td>
             </tr>
             <tr>
@@ -462,12 +489,10 @@ function image_upload(field, thumb) {
 		close: function (event, ui) {
 			if ($('#' + field).attr('value')) {
 				$.ajax({
-					url: 'index.php?route=common/filemanager/image&token=<?php echo $token; ?>',
-					type: 'POST',
-					data: 'image=' + encodeURIComponent($('#' + field).val()),
+					url: 'index.php?route=common/filemanager/image&token=<?php echo $token; ?>&image=' + encodeURIComponent($('#' + field).val()),
 					dataType: 'text',
 					success: function(data) {
-						$('#' + thumb).replaceWith('<img src="' + data + '" alt="" id="' + thumb + '" class="image" onclick="image_upload(\'' + field + '\', \'' + thumb + '\');" />');
+						$('#' + thumb).replaceWith('<img src="' + data + '" alt="" id="' + thumb + '" />');
 					}
 				});
 			}

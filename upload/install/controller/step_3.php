@@ -36,7 +36,7 @@ class ControllerStep3 extends Controller {
 			$output .= 'define(\'DB_USERNAME\', \'' . addslashes($this->request->post['db_user']) . '\');' . "\n";
 			$output .= 'define(\'DB_PASSWORD\', \'' . addslashes($this->request->post['db_password']) . '\');' . "\n";
 			$output .= 'define(\'DB_DATABASE\', \'' . addslashes($this->request->post['db_name']) . '\');' . "\n";
-			$output .= 'define(\'DB_PREFIX\', \'' . addslashes(strtolower($this->request->post['db_prefix'])) . '\');' . "\n";
+			$output .= 'define(\'DB_PREFIX\', \'' . addslashes($this->request->post['db_prefix']) . '\');' . "\n";
 			$output .= '?>';				
 		
 			$file = fopen(DIR_OPENCART . 'config.php', 'w');
@@ -75,7 +75,7 @@ class ControllerStep3 extends Controller {
 			$output .= 'define(\'DB_USERNAME\', \'' . addslashes($this->request->post['db_user']) . '\');' . "\n";
 			$output .= 'define(\'DB_PASSWORD\', \'' . addslashes($this->request->post['db_password']) . '\');' . "\n";
 			$output .= 'define(\'DB_DATABASE\', \'' . addslashes($this->request->post['db_name']) . '\');' . "\n";
-			$output .= 'define(\'DB_PREFIX\', \'' . addslashes(strtolower($this->request->post['db_prefix'])) . '\');' . "\n";
+			$output .= 'define(\'DB_PREFIX\', \'' . addslashes($this->request->post['db_prefix']) . '\');' . "\n";
 			$output .= '?>';	
 
 			$file = fopen(DIR_OPENCART . 'admin/config.php', 'w');
@@ -185,7 +185,7 @@ class ControllerStep3 extends Controller {
 			'footer'
 		);
 		
-		$this->response->setOutput($this->render(TRUE));		
+		$this->response->setOutput($this->render());		
 	}
 	
 	private function validate() {
@@ -209,7 +209,7 @@ class ControllerStep3 extends Controller {
 			$this->error['password'] = 'Password required!';
 		}
 
-		if ((strlen(utf8_decode($this->request->post['email'])) > 96) || !preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $this->request->post['email'])) {
+		if ((utf8_strlen($this->request->post['email']) > 96) || !preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $this->request->post['email'])) {
 			$this->error['email'] = 'Invalid E-Mail!';
 		}
 
@@ -232,9 +232,9 @@ class ControllerStep3 extends Controller {
 		}	
 		
     	if (!$this->error) {
-      		return TRUE;
+      		return true;
     	} else {
-      		return FALSE;
+      		return false;
     	}		
 	}
 }

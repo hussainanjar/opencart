@@ -164,9 +164,7 @@ class ControllerPaymentAuthorizeNetAim extends Controller {
 		
 		curl_close($curl);
 		
-		$this->load->library('json');
-		
-		$this->response->setOutput(Json::encode($json));
+		$this->response->setOutput(json_encode($json));
 	}
 }
 ?>
